@@ -112,3 +112,25 @@ npm start
 - 不要把 Cookie、token（令牌）、Bark 地址写进代码或提交到仓库。
 - `COZE_COOKIES_JSON`、`PUSHPLUS_TOKEN`、`BARK_PUSH_URL`、`GH_PAT` 都应该放在 GitHub Secrets（GitHub 加密变量）里。
 - 如果怀疑 Cookie 泄露，退出 Coze 登录并重新登录，再更新 `COZE_COOKIES_JSON`。
+
+---
+
+## 免责声明
+
+本项目仅供个人学习交流，请勿将本项目用于违反平台规定或触犯法律的用途，使用本项目产生的一切后果由使用者自行承担
+
+## 🔗 LinuxDo 社区
+
+<div align="center">
+  <a href="https://linux.do" target="_blank">
+    <img src="https://cdn3.ldstatic.com/original/4X/c/c/d/ccd8c210609d498cbeb3d5201d4c259348447562.png" alt="LinuxDo" height="60">
+  </a>
+  <p>
+    <a href="https://linux.do" target="_blank"><strong>LinuxDo 社区</strong></a><br>
+  </p>
+    <p>@蕉灼の仓鼠</p>
+    <p>本人长期活跃于L站;</p>
+    <p>这里的人很好说话又好听;</p>
+    <p>欢迎都来加入L站大家庭。 </p>
+
+</div>
