@@ -48,6 +48,59 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: npm run update-secret
 
+      - name: Notify on success
+        if: success()
+        env:
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+          PUSHPLUS_TOPIC: ${{ secrets.PUSHPLUS_TOPIC }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          token = os.environ.get("PUSHPLUS_TOKEN", "").strip()
+          if not token:
+              print("PUSHPLUS_TOKEN is not set; skip success notification.")
+              raise SystemExit(0)
+
+          title = "Coze每日积分已领取 ✅"
+          content = "\n".join(
+              item for item in [
+                  "Coze 每日积分已成功领取！",
+                  f"运行记录：{os.environ.get('RUN_URL', '')}" if os.environ.get("RUN_URL") else "",
+              ] if item
+          )
+
+          payload = {
+              "token": token,
+              "title": title,
+              "content": content,
+              "template": "txt",
+          }
+          topic = os.environ.get("PUSHPLUS_TOPIC", "").strip()
+          if topic:
+              payload["topic"] = topic
+
+          request = urllib.request.Request(
+              "https://www.pushplus.plus/send",
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"},
+              method="POST",
+          )
+          try:
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  body = response.read().decode("utf-8", errors="replace")
+              result = json.loads(body)
+              if result.get("code") != 200:
+                  print(f"pushplus returned code {result.get('code')}: {result.get('msg') or body}")
+              else:
+                  print("Success notification sent via pushplus.")
+          except Exception as error:
+              print(f"pushplus notification failed: {error}")
+          PY
+
       - name: Upload failure artifacts
         if: failure()
         uses: actions/upload-artifact@v6
